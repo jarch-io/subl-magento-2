@@ -1,0 +1,11 @@
+{
+    "app_code_path": "app\\code",
+    "delimiter_path": "\\",
+    "company":
+    [
+        {
+            "name" : "Vendor",
+            "copyright_format": "/**\n* Copyright © {vendor}, Inc. All rights reserved.\n* See COPYING.txt for license details.\n*/"
+        }
+    ]
+}
