@@ -1,0 +1,34 @@
+[
+	{
+        "id": "preferences",
+        "children":
+        [
+            {
+                "id": "package-settings",
+                "children":
+                [
+                    {
+                        "caption": "Magento 2",
+                        "children":
+                        [
+                            {
+                            	"command": "open_file",
+                            	"caption": "Settings - Default",
+                            	"args": {
+                            		"file": "${packages}/magento_2/Magento2.sublime-settings"
+                            	}
+                            },
+                            {
+                            	"command": "open_file",
+                            	"caption": "Settings - User",
+                            	"args": {
+                            		"file": "${packages}/User/Magento2.sublime-settings"
+                            	}
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+]

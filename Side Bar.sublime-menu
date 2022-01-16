@@ -1,0 +1,11 @@
+[
+	{ "caption": "-" },
+	{
+		"caption": "Magento 2",
+		"children":
+		[
+			{ "caption": "Create module", "command": "make_module_m2"},
+			{ "caption": "Saluda", "command": "saluda"}
+		]
+	}
+]
