@@ -8,6 +8,26 @@ from magento_2.lib.getting_settings import Settings
 from magento_2.templates.file_php import registration as registrationTpl
 from magento_2.templates.file_xml import module as moduleTpl
 
+class CompanyInputHandler(sublime_plugin.ListInputHandler):
+	def placeholder(self):
+		return "Select a company"
+
+	def list_items(self):
+		settings = Settings()
+		options = []
+
+		for company in settings.getSetting('company'):
+			options.append(company['name'])
+
+		return options
+
+	def next_input(self, args):
+		return ModuleInputHandler()
+
+class ModuleInputHandler(sublime_plugin.TextInputHandler):
+	def placeholder(self):
+		return "Write a module name"
+
 class MakeModuleM2Command(sublime_plugin.TextCommand):
 
 	moduleName = ''
@@ -16,28 +36,25 @@ class MakeModuleM2Command(sublime_plugin.TextCommand):
 
 	settings = None
 
-	def run(self, edit):
+	def input(self, args):
+		return CompanyInputHandler()
+
+	def run(self, edit, company, module):
 		self.settings = Settings()
+		self.vendorName = company
+		self.moduleName = module
+
 		companies = self.settings.getSetting('company')
-		
-		options = []
 
 		for company in companies:
-		 	options.append(company['name'])
+		 	if self.vendorName == company['name']:
+		 		self.copyrightFormat = company['copyright_format'].format(vendor = self.vendorName)
+		 		break
 
-		self.view.window().show_quick_panel(options, on_select = self.selectCompany)
-
-	def selectCompany(self, index):
-		if index != -1:
-			company = self.settings.getSetting('company')[index]
-			self.vendorName = company['name']
-			self.copyrightFormat = company['copyright_format'].format(vendor = self.vendorName)
-			self.view.window().show_input_panel('Module Name', 'Module', self.getModuleName, None, None)
-
-	def getModuleName(self, module):
-		if module != '':
-			self.moduleName = module
+		if self.vendorName != '' and self.moduleName != '':
 			self.generateModule()
+		else:
+			sublime.status_message("Module has not been created")
 
 	def generateModule(self):
 		moduleNew = self.vendorName + '_' + self.moduleName
@@ -70,3 +87,5 @@ class MakeModuleM2Command(sublime_plugin.TextCommand):
 
 		sublime.active_window().open_file(fileModuleXml)
 		sublime.active_window().open_file(fileModuleRegistration)
+
+		sublime.status_message("Module %s_%s has been created" % (self.vendorName, self.moduleName))
