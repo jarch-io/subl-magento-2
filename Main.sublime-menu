@@ -15,7 +15,7 @@
                             	"command": "open_file",
                             	"caption": "Settings - Default",
                             	"args": {
-                            		"file": "${packages}/magento_2/Magento2.sublime-settings"
+                            		"file": "${packages}/magento_2/Magento2 (${platform}).sublime-settings"
                             	}
                             },
                             {
