@@ -44,12 +44,7 @@ class MakeModuleM2Command(sublime_plugin.TextCommand):
 		self.vendorName = company
 		self.moduleName = module
 
-		companies = self.settings.getSetting('company')
-
-		for company in companies:
-		 	if self.vendorName == company['name']:
-		 		self.copyrightFormat = company['copyright_format'].format(vendor = self.vendorName)
-		 		break
+		self.copyrightFormat = self.settings.getCopyright(vendor = self.vendorName)
 
 		if self.vendorName != '' and self.moduleName != '':
 			self.generateModule()
