@@ -4,9 +4,19 @@ import sublime_plugin
 import os
 
 from magento_2.lib.getting_settings import Settings
+from magento_2.lib.inputs.list_inputs import CompanyInputHandler as CompanyMasterInputHandler
 
 from magento_2.templates.file_php import registration as registrationTpl
 from magento_2.templates.file_xml import module as moduleTpl
+
+class CompanyInputHandler(CompanyMasterInputHandler):
+	
+	def next_input(self, args):
+		return ModuleInputHandler()
+
+class ModuleInputHandler(sublime_plugin.TextInputHandler):
+	def placeholder(self):
+		return "Write a module name"
 
 class MakeModuleM2Command(sublime_plugin.TextCommand):
 
@@ -16,28 +26,20 @@ class MakeModuleM2Command(sublime_plugin.TextCommand):
 
 	settings = None
 
-	def run(self, edit):
+	def input(self, args):
+		return CompanyInputHandler()
+
+	def run(self, edit, company, module):
 		self.settings = Settings()
-		companies = self.settings.getSetting('company')
-		
-		options = []
+		self.vendorName = company
+		self.moduleName = module
 
-		for company in companies:
-		 	options.append(company['name'])
+		self.copyrightFormat = self.settings.getCopyright(vendor = self.vendorName)
 
-		self.view.window().show_quick_panel(options, on_select = self.selectCompany)
-
-	def selectCompany(self, index):
-		if index != -1:
-			company = self.settings.getSetting('company')[index]
-			self.vendorName = company['name']
-			self.copyrightFormat = company['copyright_format'].format(vendor = self.vendorName)
-			self.view.window().show_input_panel('Module Name', 'Module', self.getModuleName, None, None)
-
-	def getModuleName(self, module):
-		if module != '':
-			self.moduleName = module
+		if self.vendorName != '' and self.moduleName != '':
 			self.generateModule()
+		else:
+			sublime.status_message("Module has not been created")
 
 	def generateModule(self):
 		moduleNew = self.vendorName + '_' + self.moduleName
@@ -70,3 +72,5 @@ class MakeModuleM2Command(sublime_plugin.TextCommand):
 
 		sublime.active_window().open_file(fileModuleXml)
 		sublime.active_window().open_file(fileModuleRegistration)
+
+		sublime.status_message("Module %s_%s has been created" % (self.vendorName, self.moduleName))

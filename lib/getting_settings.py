@@ -30,4 +30,14 @@ class Settings():
 		if(key == ''):
 			return self.settings
 		else:
-			return self.settings.get(key)	
+			return self.settings.get(key)
+
+	def getCopyright(self, **args):
+		copyright = ''
+
+		for company in self.getSetting('company'):
+			if company['name'] == args.get('vendor'):
+				copyright = company['copyright_format']
+				break
+
+		return copyright.format(**args)
