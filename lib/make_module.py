@@ -4,23 +4,13 @@ import sublime_plugin
 import os
 
 from magento_2.lib.getting_settings import Settings
+from magento_2.lib.inputs.list_inputs import CompanyInputHandler as CompanyMasterInputHandler
 
 from magento_2.templates.file_php import registration as registrationTpl
 from magento_2.templates.file_xml import module as moduleTpl
 
-class CompanyInputHandler(sublime_plugin.ListInputHandler):
-	def placeholder(self):
-		return "Select a company"
-
-	def list_items(self):
-		settings = Settings()
-		options = []
-
-		for company in settings.getSetting('company'):
-			options.append(company['name'])
-
-		return options
-
+class CompanyInputHandler(CompanyMasterInputHandler):
+	
 	def next_input(self, args):
 		return ModuleInputHandler()
 
