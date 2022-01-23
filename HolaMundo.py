@@ -24,9 +24,102 @@ class NameInputHandler(sublime_plugin.TextInputHandler):
 
 	def preview(self, text):
 		if text == '':
-			text = 'Index'
+			text = "Index"
 
-		return text
+		commonCss = """
+			<style>
+				ul {
+					padding-left: 10px;
+					padding-right: 0px;
+					padding-top: 0px;
+					padding-bottom: 0px;
+
+					margin: 0px;
+
+					li {
+						list-style-type: square;
+					}
+				}
+			</style>
+		"""
+
+		return sublime.Html("""
+			<html>
+				<body>
+					{cssStyle}
+					<div>
+						<code>Access from https://yourhost.com/{route}/{controllerPath}/{action}</code>
+					</div>
+					<ul>
+						<li>
+							Block/{controllerClass}/{actionClass}.php
+						</li>
+						<li>
+							Controller
+						</li>
+						<li>
+							etc
+							<ul>
+								<li>
+									{scope}
+									<ul>
+										<li>routes.xml</li>
+									</ul>
+								</li>
+							</ul>
+						</li>
+						<li>
+							view
+							<ul>
+								<li>
+									{scope}
+									<ul>
+										<li>
+											layout
+											<ul>
+												<li>
+													{route}_{controllerUnder}_{action}.xml
+												</li>
+											</ul>
+										</li>
+										<li>
+											templates
+											<ul>
+												<li>
+													{controllerUnder}/{action}.phtml
+												</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</body>
+			</html>
+		""".format(cssStyle = commonCss, controllerClass = 'Index', actionClass = 'Index', scope = 'frontend', route = 'module', controllerUnder = 'index', action = 'index', controllerPath = 'index'))
+
+class GeneratorController():
+	scope = ''
+	route = ''
+	controller = ''
+	module = ''
+	vendor = ''
+
+	def setScope(self, scope):
+		self.scope = scope
+
+	def setRoute(self, route):
+		self.route = route
+
+	def setController(self, controller):
+		self.controller = controller
+
+	def setModule(self, module):
+		self.module = module
+
+	def setvendor(self, vendor):
+		self.vendor = vendor
 
 class ScopeInputHandler(sublime_plugin.ListInputHandler):
 
