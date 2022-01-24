@@ -9,96 +9,6 @@ from magento_2.lib.getting_settings import Settings
 
 from magento_2.lib.inputs.list_inputs import CompanyInputHandler as CompanyMasterInputHandler
 
-class SaludaCommand(sublime_plugin.TextCommand):
-	def run(self, edit, company, module, scope, name):
-		sublime.status_message("%s -- %s -- %s -- %s" % (company, module, scope, name))
-
-	def input(self, args):
-		company = CompanyInputHandler()
-		company.setView(self.view)
-		return company
-
-class NameInputHandler(sublime_plugin.TextInputHandler):
-	def placeholder(self):
-		return "Write a controller name"
-
-	def preview(self, text):
-		if text == '':
-			text = "Index"
-
-		commonCss = """
-			<style>
-				ul {
-					padding-left: 10px;
-					padding-right: 0px;
-					padding-top: 0px;
-					padding-bottom: 0px;
-
-					margin: 0px;
-
-					li {
-						list-style-type: square;
-					}
-				}
-			</style>
-		"""
-
-		return sublime.Html("""
-			<html>
-				<body>
-					{cssStyle}
-					<div>
-						<code>Access from https://yourhost.com/{route}/{controllerPath}/{action}</code>
-					</div>
-					<ul>
-						<li>
-							Block/{controllerClass}/{actionClass}.php
-						</li>
-						<li>
-							Controller
-						</li>
-						<li>
-							etc
-							<ul>
-								<li>
-									{scope}
-									<ul>
-										<li>routes.xml</li>
-									</ul>
-								</li>
-							</ul>
-						</li>
-						<li>
-							view
-							<ul>
-								<li>
-									{scope}
-									<ul>
-										<li>
-											layout
-											<ul>
-												<li>
-													{route}_{controllerUnder}_{action}.xml
-												</li>
-											</ul>
-										</li>
-										<li>
-											templates
-											<ul>
-												<li>
-													{controllerUnder}/{action}.phtml
-												</li>
-											</ul>
-										</li>
-									</ul>
-								</li>
-							</ul>
-						</li>
-					</ul>
-				</body>
-			</html>
-		""".format(cssStyle = commonCss, controllerClass = 'Index', actionClass = 'Index', scope = 'frontend', route = 'module', controllerUnder = 'index', action = 'index', controllerPath = 'index'))
-
 class GeneratorController():
 	scope = ''
 	route = ''
@@ -118,8 +28,120 @@ class GeneratorController():
 	def setModule(self, module):
 		self.module = module
 
-	def setvendor(self, vendor):
+	def setVendor(self, vendor):
 		self.vendor = vendor
+
+	def getController(self):
+		return self.controller.split(sep = '/')
+
+	def getControllerClass(self):
+		controllerArray = self.getController()
+		controllerArray.pop()
+		
+		return '/'.join(controllerArray)
+
+	def getControllerPath(self):
+		controllerArray = self.getController()
+		controllerArray.pop()
+
+		return '_'.join(controllerArray).lower()
+
+	def getActionClass(self):
+		return self.getController().pop()
+
+	def getFiles(self):
+		return [
+			"Block/{scope}{controller}/{action}.php".format(scope = 'Adminhtml/' if self.scope == 'adminhtml' else '', controller = self.getControllerClass(), action = self.getActionClass()),
+			"Controller/{scope}{controller}/{action}.php".format(scope = 'Adminhtml/' if self.scope == 'adminhtml' else '', controller = self.getControllerClass(), action = self.getActionClass()),
+			"etc/{scope}/routes.xml".format(scope = self.scope.lower()),
+			"view/{scope}/layout/{route}_{controller}_{action}.xml".format(scope = self.scope.lower(), route = self.route.lower(), action = self.getActionClass().lower(), controller = self.getControllerPath().lower()),
+			"view/{scope}/template/{controller}/{action}.phtml".format(scope = self.scope.lower(), route = self.route.lower(), action = self.getActionClass().lower(), controller = self.getControllerClass().lower())
+		]
+
+	def formatHtml(self):
+		commonCss = """
+			<style>
+				ul {
+					padding-left: 10px;
+					padding-right: 0px;
+					padding-top: 0px;
+					padding-bottom: 0px;
+
+					margin: 0px;
+
+					li {
+						list-style-type: square;
+					}
+				}
+			</style>
+		"""
+
+		htmlPath = []
+
+		for file in self.getFiles():
+			fileArray = file.split(sep = '/')
+			htmlString = ""
+
+			for idx, part in enumerate(fileArray):
+				htmlString += "<li>{}".format(part + ('<ul>' if idx < len(fileArray) - 1 else '</li>'))
+
+			htmlString += "".join(["</ul></li>" for x in range(len(fileArray) - 1)])
+
+			htmlPath.append(htmlString)
+		
+		return sublime.Html("""
+			<html>
+				<body>
+					{cssStyle}
+					<div>
+						<code>Access from https://yourhost.com/{route}/{controllerPath}/{action}</code>
+					</div>
+					<ul>
+						{htmlParse}
+					</ul>
+				</body>
+			</html>
+		""".format(cssStyle = commonCss, route = self.route.lower(), controllerPath = self.getControllerPath(), action = self.getControllerClass().lower(), htmlParse = "".join(htmlPath)))
+
+generatorController = GeneratorController()
+
+class SaludaCommand(sublime_plugin.TextCommand):
+	def run(self, edit, company, module, scope, route, name):
+		pprint(generatorController.getFiles())
+		sublime.status_message("%s -- %s -- %s -- %s" % (company, module, scope, name))
+
+	def input(self, args):
+		company = CompanyInputHandler()
+		company.setView(self.view)
+		return company
+
+class NameInputHandler(sublime_plugin.TextInputHandler):
+	def placeholder(self):
+		return "Write a controller name"
+
+	def preview(self, text):
+		textArray = []
+
+		if text != '':
+			textArray = text.split(sep = '/')
+
+		if len(textArray) == 0:
+			textArray.append('Index')
+
+		if len(textArray) == 1:
+			textArray.append('Index')
+
+		generatorController.setController('/'.join(textArray))
+
+		return generatorController.formatHtml()
+
+class RouteInputHandler(sublime_plugin.TextInputHandler):
+	def placeholder(self):
+		return "Write a route"
+
+	def next_input(self, args):
+		generatorController.setRoute(args.get('route'))
+		return NameInputHandler()
 
 class ScopeInputHandler(sublime_plugin.ListInputHandler):
 
@@ -130,7 +152,8 @@ class ScopeInputHandler(sublime_plugin.ListInputHandler):
 		return ['adminhtml', 'frontend']
 
 	def next_input(self, args):
-		return NameInputHandler()
+		generatorController.setScope(args.get('scope'))
+		return RouteInputHandler()
 
 class ModuleInputHandler(sublime_plugin.ListInputHandler):
 	vendor = ''
@@ -161,6 +184,7 @@ class ModuleInputHandler(sublime_plugin.ListInputHandler):
 		return moduleList
 
 	def next_input(self, args):
+		generatorController.setModule(args.get('module'))
 		return ScopeInputHandler()
 
 
@@ -174,5 +198,8 @@ class CompanyInputHandler(CompanyMasterInputHandler):
 		module = ModuleInputHandler()
 		module.setVendor(args.get('company'))
 		module.setProjectDirectory(self.view.window().extract_variables()['project_path'])
+
+		generatorController.setVendor(args.get('company'))
+
 		return module
 	
