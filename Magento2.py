@@ -1,1 +1,2 @@
 from magento_2.lib.make_module import MakeModuleM2Command
+from magento_2.lib.make_controller import MakeControllerM2Command
