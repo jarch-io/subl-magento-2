@@ -1,4 +1,5 @@
 [
 	{ "caption": "Magento 2: Create module", "command": "make_module_m2"},
+	{ "caption": "Magento 2: Create controller", "command": "make_controller_m2"},
 	{ "caption": "Magento 2: Saluda", "command": "saluda"},
 ]
