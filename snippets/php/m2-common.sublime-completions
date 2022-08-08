@@ -1,0 +1,35 @@
+{
+    "scope": "source.php",
+    "completions": [
+    	{
+            "trigger": "m2 logger",
+            "annotation": "Logger de incrustacion directa",
+            "contents": "\\$writer = new \\\\Zend\\\\Log\\\\Writer\\\\Stream(BP . '/var/log/${1:test}.log');\n\\$logger = new \\\\Zend\\\\Log\\\\Logger();\n\\$logger->addWriter(\\$writer);\n\\$logger->info('${2:message}');",
+            "kind": "snippet"
+        },
+        {
+            "trigger": "m2 block frontend class",
+            "annotation": "Codigo necesario para crear una clase Block",
+            "contents": "namespace ${1:Namespace}\n\nclass ${2:ClassName} extends \\\\Magento\\\\Framework\\\\View\\\\Element\\\\Template\n{\n\tpublic function __construct(\n\t\t\\\\Magento\\\\Framework\\\\View\\\\Element\\\\Template\\\\Context \\$context\n\t)\n\t{\n\t\tparent::__construct(\\$context);\n\t}\n}",
+            "kind": "snippet"
+        },
+        {
+            "trigger": "m2 observer",
+            "annotation": "Clase esqueleto de un observer",
+            "contents": "namespace ${1:Namespace};\n\nuse Magento\\\\Framework\\\\Event\\\\Observer;\nuse Magento\\\\Framework\\\\Event\\\\ObserverInterface;\n\nclass ${2:ObserverName} implements ObserverInterface\n{\n\tpublic function __construct()\n\t{\n\t\t\n\t}\n\n\tpublic function execute(Observer \\$observer)\n\t{\n\t\t\n\t}\n}",
+            "kind": "snippet"
+        },
+        {
+            "trigger": "m2 helper",
+            "annotation": "Clase esqueleto de un helper",
+            "contents": "namespace ${1:Namespace};\n\nuse \\\\Magento\\\\Framework\\\\App\\\\Helper\\\\AbstractHelper;\n\nclass ${2:ClassName} extends AbstractHelper\n{\n\t${3:content}\n}",
+            "kind": "snippet"
+        },
+        {
+            "trigger": "m2 command CLI",
+            "annotation": "Clase esqueleto para un comando CLI personalizado",
+            "contents": "namespace ${1:Namespace};\n\nuse Symfony\\\\Component\\\\Console\\\\Command\\\\Command;\nuse Symfony\\\\Component\\\\Console\\\\Input\\\\InputInterface;\nuse Symfony\\\\Component\\\\Console\\\\Output\\\\OutputInterface;\nuse Symfony\\\\Component\\\\Console\\\\Input\\\\InputOption;\n\nclass ${2:Class} extends Command\n{\n\tconst ${3:FIELD} = '${4:field}';\n\n\tprotected function configure()\n\t{\n\t\t\\$options = array(\n\t\t\tnew InputOption(\n\t\t\t\tself::${5:$3},\n\t\t\t\tnull,\n\t\t\t\tInputOption::VALUE_REQUIRED,\n\t\t\t\t'${6:FieldName}'\n\t\t\t)\n\t\t);\n\n\t\t\\$this->setName('${7:Command:Name}');\n\t\t\\$this->setDescription('${8:Description}');\n\t\t\\$this->setDefinition(\\$options);\n\n\t\tparent::configure();\n\t}\n\n\tprotected function execute(InputInterface \\$input, OutputInterface \\$output)\n\t{\n\t\t${9:#code here!}\n\t}\n}",
+            "kind": "snippet"
+        }
+    ]
+}

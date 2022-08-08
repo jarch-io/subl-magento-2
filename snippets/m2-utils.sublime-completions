@@ -1,0 +1,17 @@
+{
+    "scope": "text, source",
+    "completions": [
+    	{
+            "trigger": "m2 customer password",
+            "annotation": "Generate query for change password to customer",
+            "contents": "UPDATE customer_entity SET `password_hash` = CONCAT(SHA2('6beb86ba43aac2e01f7a1789c69fa637${1:password}', 256), ':6beb86ba43aac2e01f7a1789c69fa637:1') WHERE `email` = \"${2:email}\";",
+            "kind": "snippet"
+        },
+        {
+            "trigger": "m2 CLI admin:user:create",
+            "annotation": "Create admin user via CLI",
+            "contents": "bin/magento admin:user:create --admin-user ${1:username} --admin-password ${2:password} --admin-email ${3:email} --admin-firstname ${4:firstname} --admin-lastname ${5:lastname}",
+            "kind": "snippet"
+        }
+    ]
+}

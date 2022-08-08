@@ -1,0 +1,71 @@
+{
+    "scope": "text.xml",
+    "completions": [
+    	{
+            "trigger": "m2 di",
+            "annotation": "Generate file structure di.xml",
+            "contents": "<?xml version=\"1.0\"?>\n<config xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"urn:magento:framework:ObjectManager/etc/config.xsd\">\n\t${0:<!-- content -->}\n</config>",
+            "kind": "snippet"
+        },
+        {
+            "trigger": "m2 virtual type",
+            "annotation": "Declare virtual type",
+            "contents": "<virtualType name=\"${1:VirtualName}\" type=\"${2:ClassName}\">\n\t<arguments>\n\t\t<argument name=\"${3:ArgumentName}\" xsi:type=\"${4:ArgumentType}\">${5:ArgumentValue}</argument>\n\t</arguments>\n</virtualType>",
+            "kind": "snippet"
+        },
+        {
+            "trigger": "m2 constructor type",
+            "annotation": "Declare constructor type",
+            "contents": "<type name=\"${1:ClassName}\">\n\t<arguments>\n\t\t<argument name=\"${2:ArgumentName}\" xsi:type=\"${3:ArgumentType}\">${4:ArgumentValue}</argument>\n\t</arguments>\n</type>",
+            "kind": "snippet"
+        },
+        {
+            "trigger": "m2 plugin",
+            "annotation": "Declare plugin",
+            "contents": "<type name=\"${1:ClassName}\">\n\t<plugin name=\"${5:plugin_name}\" type=\"${2:Vendor}\\\\${3:Module}\\\\Plugin\\\\${4:$1}\" sortOrder=\"${6:100}\" />\n</type>",
+            "kind": "snippet"
+        },
+        {
+            "trigger": "m2 preference",
+            "annotation": "Declare preference",
+            "contents": "<preference for=\"${1:ClassName}\" type=\"${2:CustomClassName}\" />",
+            "kind": "snippet"
+        },
+        {
+            "trigger": "m2 block",
+            "annotation": "Declare block tag",
+            "contents": "<block name=\"${1:Name}\" class=\"${2:ClassName}\" template=\"${3:Template}.phtml\" after=\"${4:afterBlock}\" before=\"${5:beforeBlock}\" />",
+            "kind": "snippet"
+        },
+        {
+            "trigger": "m2 container",
+            "annotation": "Declare container tag",
+            "contents": "<container name=\"${1:Name}\" htmlTag=\"${2:html-tag}\" htmlClass=\"${3:html-class}\" after=\"${4:afterContainer}\" before=\"${5:beforeContainer}\" >\n\n</container>",
+            "kind": "snippet"
+        },
+        {
+            "trigger": "m2 events declare",
+            "annotation": "Declare events file",
+            "contents": "<config xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"urn:magento:framework:Event/etc/events.xsd\">\n\n</config>",
+            "kind": "snippet"
+        },
+        {
+            "trigger": "m2 event tag",
+            "annotation": "Declare event tag",
+            "contents": "<event name=\"${1:EventName}\">\n\t<observer name=\"${2:ObserverName}\" instance=\"${3:InstaceObserver}\" />\n</event>",
+            "kind": "snippet"
+        },
+        {
+            "trigger": "m2 db schema",
+            "annotation": "DB schema declaration",
+            "contents": "<?xml version=\"1.0\"?>\n\n<schema xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd\">\n\t${1:content}\n</schema>",
+            "kind": "snippet"
+        },
+        {
+            "trigger": "m2 command list",
+            "annotation": "Add command CLI",
+            "contents": "<type name=\"Magento\\\\Framework\\\\Console\\\\CommandList\">\n\t<arguments>\n\t\t<argument name=\"commands\" xsi:type=\"array\">\n\t\t\t<item name=\"${1:CommandName}\" xsi:type=\"object\">${2:CommandClass}</item>\n\t\t</argument>\n\t</arguments>\n</type>",
+            "kind": "snippet"
+        }
+    ]
+}
